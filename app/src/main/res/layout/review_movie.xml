@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+    <LinearLayout android:paddingBottom="10dp" android:paddingTop="10dp" android:layout_height="wrap_content" android:layout_width="match_parent" android:orientation="vertical" xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView android:layout_height="wrap_content" android:layout_width="match_parent" android:textSize="@dimen/text_size" android:textStyle="bold" android:id="@+id/review_author"/>
+
+    <TextView android:layout_height="wrap_content" android:layout_width="match_parent" android:textSize="@dimen/text_size" android:id="@+id/review_content" android:layout_marginTop="5dp"/>
+
+</LinearLayout>

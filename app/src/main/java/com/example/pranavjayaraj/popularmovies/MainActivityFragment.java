@@ -1,6 +1,11 @@
 package com.example.pranavjayaraj.popularmovies;
+import com.example.pranavjayaraj.popularmovies.Data.MoviesContract;
+import com.example.pranavjayaraj.popularmovies.Models.Movie;
 import com.example.pranavjayaraj.popularmovies.adapters.AsyncAdapter;
-import android.content.Intent;
+
+
+import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,13 +45,42 @@ public class MainActivityFragment extends Fragment {
     private static final String SORT_SETTING_KEY = "sort_setting";
     private static final String POPULARITY_DESC = "popularity.desc";
     private static final String RATING_DESC = "vote_average.desc";
-    private static final String MOVIES_KEY    = "movies";
+    private static final String FAVORITE = "favorite";
+    private static final String MOVIES_KEY = "movies";
 
     private String mSortBy = POPULARITY_DESC;
 
     private ArrayList<Movie> mMovies = null;
 
+    private static final String[] MOVIE_COLUMNS = {
+            MoviesContract.MoviesEntry._ID,
+            MoviesContract.MoviesEntry.COLUMN_MOVIE_ID,
+            MoviesContract.MoviesEntry.COLUMN_TITLE,
+            MoviesContract.MoviesEntry.COLUMN_IMAGE,
+            MoviesContract.MoviesEntry.COLUMN_IMAGE2,
+            MoviesContract.MoviesEntry.COLUMN_OVERVIEW,
+            MoviesContract.MoviesEntry.COLUMN_RATING,
+            MoviesContract.MoviesEntry.COLUMN_DATE,
+            MoviesContract.MoviesEntry.COLUMN_POP,
+            MoviesContract.MoviesEntry.COLUMN_COUNT
+    };
+    public static final int COL_ID = 0;
+    public static final int COL_MOVIE_ID = 1;
+    public static final int COL_TITLE = 2;
+    public static final int COL_IMAGE = 3;
+    public static final int COL_IMAGE2 = 4;
+    public static final int COL_OVERVIEW = 5;
+    public static final int COL_RATING = 6;
+    public static final int COL_DATE = 7;
+    public static final int COL_POP=8;
+    public static final int COL_COUNT=9;
+
+
     public MainActivityFragment() {
+    }
+
+    public interface Callback {
+        void onItemSelected(Movie movie);
     }
 
     @Override
@@ -60,36 +93,57 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main_menu, menu);
+
         MenuItem action_sort_by_popularity = menu.findItem(R.id.action_sort_by_popularity);
         MenuItem action_sort_by_rating = menu.findItem(R.id.action_sort_by_rating);
+        MenuItem action_sort_by_favorite = menu.findItem(R.id.action_sort_by_favorite);
+
         if (mSortBy.contentEquals(POPULARITY_DESC)) {
-            if (!action_sort_by_popularity.isChecked())
+            if (!action_sort_by_popularity.isChecked()) {
                 action_sort_by_popularity.setChecked(true);
-        }
-        else {
-            if (!action_sort_by_rating.isChecked())
+            }
+            } else if (mSortBy.contentEquals(RATING_DESC)) {
+            if (!action_sort_by_rating.isChecked()) {
                 action_sort_by_rating.setChecked(true);
+            }
+        }else if(mSortBy.contentEquals(FAVORITE)){
+            if (!action_sort_by_favorite.isChecked()){
+                action_sort_by_favorite.setChecked(true);
         }
     }
+}
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
             case R.id.action_sort_by_popularity:
-                if (item.isChecked())
+                if (item.isChecked()) {
                     item.setChecked(false);
-                else
+                }
+                    else {
                     item.setChecked(true);
+                }
                 mSortBy = POPULARITY_DESC;
                 updateMovies(mSortBy);
                 return true;
             case R.id.action_sort_by_rating:
-                if (item.isChecked())
+                if (item.isChecked()) {
                     item.setChecked(false);
-                else
+                }else {
                     item.setChecked(true);
-                mSortBy = RATING_DESC;
+                }
+                    mSortBy = RATING_DESC;
+                updateMovies(mSortBy);
+                return true;
+            case R.id.action_sort_by_favorite:
+                if (item.isChecked()) {
+                    item.setChecked(false);
+                } else
+                {
+                    item.setChecked(true);
+        }
+                mSortBy = FAVORITE;
                 updateMovies(mSortBy);
                 return true;
             default:
@@ -104,16 +158,13 @@ public class MainActivityFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
         mGridView = (GridView) view.findViewById(R.id.grid_view);
-
-        mMovieGridAdapter = new AsyncAdapter(getActivity());
+        mMovieGridAdapter = new AsyncAdapter(getActivity(), new ArrayList<Movie>());
         mGridView.setAdapter(mMovieGridAdapter);
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Movie movie = mMovieGridAdapter.getItem(position);
-                Intent intent = new Intent(getActivity(), Details.class)
-                        .putExtra(DetailsFragment.DETAIL_MOVIE, movie);
-                startActivity(intent);
+                ((Callback) getActivity()).onItemSelected(movie);
             }
         });
 
@@ -123,9 +174,8 @@ public class MainActivityFragment extends Fragment {
             }
             if (savedInstanceState.containsKey(MOVIES_KEY)) {
                 mMovies = savedInstanceState.getParcelableArrayList(MOVIES_KEY);
-                for (Movie movie : mMovies) {
-                    mMovieGridAdapter.add(movie);
-                }
+                    mMovieGridAdapter.setData(mMovies);
+
             } else {
                 updateMovies(mSortBy);
             }
@@ -135,10 +185,12 @@ public class MainActivityFragment extends Fragment {
 
         return view;
     }
-
     private void updateMovies(String sort_by) {
-        FetchMoviesTask moviesTask = new FetchMoviesTask();
-        moviesTask.execute(sort_by);
+        if (!sort_by.contentEquals(FAVORITE)) {
+            new FetchMoviesTask().execute(sort_by);
+        } else {
+            new FetchFavoriteMoviesTask(getActivity()).execute();
+        }
     }
 
     @Override
@@ -162,7 +214,7 @@ public class MainActivityFragment extends Fragment {
 
             List<Movie> results = new ArrayList<>();
 
-            for(int i = 0; i < movieArray.length(); i++) {
+            for (int i = 0; i < movieArray.length(); i++) {
                 JSONObject movie = movieArray.getJSONObject(i);
                 Movie movieModel = new Movie(movie);
                 results.add(movieModel);
@@ -249,10 +301,53 @@ public class MainActivityFragment extends Fragment {
         protected void onPostExecute(List<Movie> movies) {
             if (movies != null) {
                 if (mMovieGridAdapter != null) {
-                    mMovieGridAdapter.clear();
-                    for (Movie movie : movies) {
-                        mMovieGridAdapter.add(movie);
+                   mMovieGridAdapter.setData(movies);
                     }
+
+                mMovies = new ArrayList<>();
+                mMovies.addAll(movies);
+            }
+        }
+    }
+
+
+    public class FetchFavoriteMoviesTask extends AsyncTask<Void, Void, List<Movie>> {
+
+        private Context mContext;
+
+        public FetchFavoriteMoviesTask(Context context) {
+            mContext = context;
+        }
+        private List<Movie> getFavoriteMoviesDataFromCursor(Cursor cursor) {
+            List<Movie> results = new ArrayList<>();
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    Movie movie = new Movie(cursor);
+                    results.add(movie);
+                } while (cursor.moveToNext());
+                cursor.close();
+            }
+            return results;
+        }
+
+
+        @Override
+        protected List<Movie> doInBackground(Void... params) {
+            Cursor cursor = mContext.getContentResolver().query(
+                    MoviesContract.MoviesEntry.CONTENT_URI,
+                    MOVIE_COLUMNS,
+                    null,
+                    null,
+                    null
+            );
+            return getFavoriteMoviesDataFromCursor(cursor);
+        }
+
+        @Override
+        protected void onPostExecute(List<Movie> movies) {
+            if (movies != null) {
+                if (mMovieGridAdapter != null) {
+                    mMovieGridAdapter.setData(movies);
                 }
                 mMovies = new ArrayList<>();
                 mMovies.addAll(movies);

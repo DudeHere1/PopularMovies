@@ -1,7 +1,11 @@
-package com.example.pranavjayaraj.popularmovies;
+package com.example.pranavjayaraj.popularmovies.Models;
 
+import android.database.Cursor;
 import android.os.Parcelable;
     import android.os.Parcel;
+
+import com.example.pranavjayaraj.popularmovies.MainActivity;
+import com.example.pranavjayaraj.popularmovies.MainActivityFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,7 +37,22 @@ public class Movie implements Parcelable {
                     this.pop=movie.getDouble("popularity");
                 }
 
-                  public int getId() {
+    public Movie(Cursor cursor) {
+        this.id=cursor.getInt(MainActivityFragment.COL_ID);
+        this.id = cursor.getInt(MainActivityFragment.COL_MOVIE_ID);
+        this.title = cursor.getString(MainActivityFragment.COL_TITLE);
+        this.image = cursor.getString(MainActivityFragment.COL_IMAGE);
+        this.image2 = cursor.getString(MainActivityFragment.COL_IMAGE2);
+        this.overview = cursor.getString(MainActivityFragment.COL_OVERVIEW);
+        this.rating = cursor.getInt(MainActivityFragment.COL_RATING);
+        this.date = cursor.getString(MainActivityFragment.COL_DATE);
+        this.count=cursor.getInt(MainActivityFragment.COL_COUNT);
+        this.pop=cursor.getLong(MainActivityFragment.COL_POP);
+    }
+
+
+
+    public int getId() {
                  return id;
                }
 

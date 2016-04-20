@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+    <FrameLayout android:layout_height="match_parent"
+    android:layout_width="@dimen/movie_detail_trailers_height"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:scaleType="centerCrop"
+        android:id="@+id/trailer_image"/>
+
+    <TextView android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:id="@+id/trailer_name"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:gravity="bottom|left"
+        android:padding="5dp"
+        android:textSize="@dimen/text_size"/>
+
+</FrameLayout>

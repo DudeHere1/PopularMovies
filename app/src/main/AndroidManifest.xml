@@ -29,6 +29,10 @@
 
 </meta-data>
     </activity>
+        <provider
+            android:name=".Data.MovieProvider"
+            android:authorities="@string/content_authority"
+        android:exported="false"/>
     </application>
 
 

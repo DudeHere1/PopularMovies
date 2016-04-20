@@ -10,4 +10,13 @@
     <string name="release_date">Released</string>
     <string name="vote_count">Vote Count</string>
     <string name="popularity">Popularity</string>
+    <string name="added_to_favorites">added to favorites</string>
+    <string name="trailers">Trailer</string>
+    <string name="reviews">Reviews</string>
+    <string name="removed_from_favorites">removed from favorites</string>
+    <string name="content_authority">"com.example.pranavjayaraj.popularmovies"</string>
+    <string name="action_sort_by_favorite">Favorites</string>
+    <string name="action_share">Share</string>
+    <string name="action_favorite">favorite</string>
+
 </resources>
