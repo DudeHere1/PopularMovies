@@ -6,6 +6,8 @@ import com.example.pranavjayaraj.popularmovies.adapters.AsyncAdapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -115,6 +117,7 @@ public class MainActivityFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         int id = item.getItemId();
         switch (id) {
             case R.id.action_sort_by_popularity:
@@ -185,10 +188,15 @@ public class MainActivityFragment extends Fragment {
 
         return view;
     }
+
     private void updateMovies(String sort_by) {
-        if (!sort_by.contentEquals(FAVORITE)) {
-            new FetchMoviesTask().execute(sort_by);
-        } else {
+        if(sort_by != FAVORITE && sort_by != RATING_DESC) {
+            new FetchPopularTask().execute(sort_by);
+        }
+            else if(sort_by!=FAVORITE && sort_by != POPULARITY_DESC){
+                new FetchTopratedTask().execute(sort_by);
+            }
+     else {
             new FetchFavoriteMoviesTask(getActivity()).execute();
         }
     }
@@ -204,9 +212,12 @@ public class MainActivityFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
-    public class FetchMoviesTask extends AsyncTask<String, Void, List<Movie>> {
 
-        private final String LOG_TAG = FetchMoviesTask.class.getSimpleName();
+            // This will only happen if there was an error getting or parsing the forecast.
+
+    public class FetchTopratedTask extends AsyncTask<String, Void, List<Movie>> {
+
+        private final String LOG_TAG = FetchTopratedTask.class.getSimpleName();
 
         private List<Movie> getMoviesDataFromJson(String jsonStr) throws JSONException {
             JSONObject movieJson = new JSONObject(jsonStr);
@@ -223,7 +234,6 @@ public class MainActivityFragment extends Fragment {
             return results;
         }
 
-        @Override
         protected List<Movie> doInBackground(String... params) {
 
             if (params.length == 0) {
@@ -236,7 +246,7 @@ public class MainActivityFragment extends Fragment {
             String jsonStr = null;
 
             try {
-                final String BASE_URL = "http://api.themoviedb.org/3/discover/movie?";
+                final String BASE_URL = "http://api.themoviedb.org/3/movie/top_rated?";
                 final String SORT_BY_PARAM = "sort_by";
                 final String API_KEY_PARAM = "api_key";
 
@@ -297,12 +307,114 @@ public class MainActivityFragment extends Fragment {
             return null;
         }
 
-        @Override
+
         protected void onPostExecute(List<Movie> movies) {
             if (movies != null) {
                 if (mMovieGridAdapter != null) {
                    mMovieGridAdapter.setData(movies);
                     }
+
+                mMovies = new ArrayList<>();
+                mMovies.addAll(movies);
+            }
+        }
+    }
+    public class FetchPopularTask extends AsyncTask<String, Void, List<Movie>> {
+
+        private final String LOG_TAG = FetchPopularTask.class.getSimpleName();
+
+        private List<Movie> getMoviesDataFromJson(String jsonStr) throws JSONException {
+            JSONObject movieJson = new JSONObject(jsonStr);
+            JSONArray movieArray = movieJson.getJSONArray("results");
+
+            List<Movie> results = new ArrayList<>();
+
+            for (int i = 0; i < movieArray.length(); i++) {
+                JSONObject movie = movieArray.getJSONObject(i);
+                Movie movieModel = new Movie(movie);
+                results.add(movieModel);
+            }
+
+            return results;
+        }
+
+        @Override
+        protected List<Movie> doInBackground(String... params) {
+
+            if (params.length == 0) {
+                return null;
+            }
+
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+
+            String jsonStr = null;
+
+            try {
+                final String BASE_URL = "http://api.themoviedb.org/3/movie/popular?";
+                final String SORT_BY_PARAM = "sort_by";
+                final String API_KEY_PARAM = "api_key";
+
+                Uri builtUri = Uri.parse(BASE_URL).buildUpon()
+                        .appendQueryParameter(SORT_BY_PARAM, params[0])
+                        .appendQueryParameter(API_KEY_PARAM, getString(R.string.tmdb_api_key))
+                        .build();
+
+                URL url = new URL(builtUri.toString());
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null) {
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+                    // But it does make debugging a *lot* easier if you print out the completed
+                    // buffer for debugging.
+                    buffer.append(line + "\n");
+                }
+
+                if (buffer.length() == 0) {
+                    return null;
+                }
+                jsonStr = buffer.toString();
+            } catch (IOException e) {
+                Log.e(LOG_TAG, "Error ", e);
+                return null;
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e(LOG_TAG, "Error closing stream", e);
+                    }
+                }
+            }
+
+            try {
+                return getMoviesDataFromJson(jsonStr);
+            } catch (JSONException e) {
+                Log.e(LOG_TAG, e.getMessage(), e);
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(List<Movie> movies) {
+            if (movies != null) {
+                if (mMovieGridAdapter != null) {
+                    mMovieGridAdapter.setData(movies);
+                }
 
                 mMovies = new ArrayList<>();
                 mMovies.addAll(movies);
