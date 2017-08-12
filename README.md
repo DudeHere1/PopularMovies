@@ -1,5 +1,5 @@
 # PopularMovies
-<b width="230px">list of movies </b>
+<b><A1 width="230px">list of movies</A1> </b>
 <b width="230px">list of movies </b>
 <b width="230px">list of movies </b><br>
 <img src="https://raw.githubusercontent.com/pranavj7Z/PopularMovies/master/one.png" height=400px; width="230px"></img>
