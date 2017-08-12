@@ -1,6 +1,6 @@
 # Popular Movies
-# Displays a list of movies from moviedb.org
 <p align="center">
+# Displays a list of movies from moviedb.org
 <img src="https://raw.githubusercontent.com/pranavj7Z/PopularMovies/master/one.png" height=400px; width="230px"></img></br>
 </P>
 # Allows you to sort the movies
