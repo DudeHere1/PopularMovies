@@ -1,5 +1,6 @@
 package com.example.pranavjayaraj.popularmovies;
 
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 
@@ -69,6 +70,7 @@ public class DetailsFragment extends Fragment {
     private TextView mVoteAverageView;
     private TextView mVoteCountView;
     private TextView mPopularityView;
+    private RatingBar mrate;
 
     private LinearListView mTrailersView;
     private LinearListView mReviewsView;
@@ -118,8 +120,8 @@ public class DetailsFragment extends Fragment {
                 @Override
                 protected void onPostExecute(Integer isFavorited) {
                     action_favorite.setIcon(isFavorited == 1 ?
-                            R.drawable.abc_btn_rating_star_on_mtrl_alpha :
-                            R.drawable.abc_btn_rating_star_off_mtrl_alpha);
+                            R.drawable.ic_favorite :
+                            R.drawable.ic_favorite_border);
                 }
             }.execute();
 
@@ -162,7 +164,7 @@ public class DetailsFragment extends Fragment {
 
                                     @Override
                                     protected void onPostExecute(Integer rowsDeleted) {
-                                        item.setIcon(R.drawable.abc_btn_rating_star_off_mtrl_alpha);
+                                        item.setIcon(R.drawable.ic_favorite_border);
                                         if (mToast != null) {
                                             mToast.cancel();
                                         }
@@ -195,7 +197,7 @@ public class DetailsFragment extends Fragment {
 
                                     @Override
                                     protected void onPostExecute(Uri returnUri) {
-                                        item.setIcon(R.drawable.abc_btn_rating_star_on_mtrl_alpha);
+                                        item.setIcon(R.drawable.ic_favorite);
                                         if (mToast != null) {
                                             mToast.cancel();
                                         }
@@ -237,10 +239,11 @@ public class DetailsFragment extends Fragment {
         mTitleView = (TextView) rootView.findViewById(R.id.detail_title);
         mOverviewView = (TextView) rootView.findViewById(R.id.detail_overview);
         mDateView = (TextView) rootView.findViewById(R.id.detail_date);
-        mVoteAverageView = (TextView) rootView.findViewById(R.id.detail_vote_average);
+
+       // mVoteAverageView = (TextView) rootView.findViewById(R.id.detail_vote_average);
         mVoteCountView = (TextView) rootView.findViewById(R.id.detail_vote_count);
         mPopularityView =(TextView)rootView.findViewById(R.id.detail_popularity);
-
+        mrate = (RatingBar)rootView.findViewById(R.id.rating);
         mTrailersView = (LinearListView) rootView.findViewById(R.id.detail_trailers);
         mReviewsView = (LinearListView) rootView.findViewById(R.id.detail_reviews);
 
@@ -284,7 +287,9 @@ public class DetailsFragment extends Fragment {
                 e.printStackTrace();
             }
 
-            mVoteAverageView.setText(Integer.toString(mMovie.getRating()));
+          //  mVoteAverageView.setText(Integer.toString(mMovie.getRating()));
+            double rate= mMovie.getRating()/2;
+            mrate.setRating((float) rate);
             mVoteCountView.setText(Integer.toString(mMovie.getCount()));
             mPopularityView.setText(Double.toString(mMovie.getPop()));
         }
