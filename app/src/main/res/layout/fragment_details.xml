@@ -116,6 +116,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/vote_average"
                     android:textStyle="bold"
+                    android:layout_marginTop="5dp"
                     android:textSize="@dimen/text_size"
                     android:layout_marginLeft="0dp"
                     android:textColor="#060650" />
@@ -125,13 +126,17 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"  />
 
-                <TextView
-                    android:id="@+id/detail_vote_average"
+                <RatingBar
+                    android:id="@+id/rating"
+                    android:layout_marginTop="7dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_size"
-                    android:textColor="#2b1c1c"
-                    android:layout_marginRight="220dp" />
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:numStars="5"
+                    android:stepSize="0.2"
+                    android:progressTint="#FFFFFF"
+                    android:layout_marginRight="150dp"
+                    android:isIndicator="true" />
 
 
             </LinearLayout>
@@ -222,7 +227,7 @@
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:padding="10dp"
-        android:background="#3ecff3">
+        android:background="#ffffff">
 
     <TextView android:layout_height="wrap_content"
         android:layout_width="wrap_content"
@@ -238,7 +243,7 @@
         android:orientation="vertical"
         android:showDividers="middle"
         android:divider="?android:dividerHorizontal"
-        android:background="#3ecff3" />
+        android:background="#ffffff" />
 
 </LinearLayout>
 
