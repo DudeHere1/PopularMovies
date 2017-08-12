@@ -1,6 +1,5 @@
 # PopularMovies
-# list of movies
-<b width="230px">list of movies </b>
+<a1 width="230px">list of movies </a1>
 <b width="230px">list of movies </b><br>
 <img src="https://raw.githubusercontent.com/pranavj7Z/PopularMovies/master/one.png" height=400px; width="230px"></img>
 <img src="https://raw.githubusercontent.com/pranavj7Z/PopularMovies/master/five.png" height=400px; width="230px"></img>
