@@ -2,7 +2,6 @@
 <p align="center">
 # Displays a list of movies from moviedb.org
 <img src="https://raw.githubusercontent.com/pranavj7Z/PopularMovies/master/one.png" height=400px; width="230px"></img></br>
-</P>
 # Allows you to sort the movies
 <img src="https://raw.githubusercontent.com/pranavj7Z/PopularMovies/master/five.png" height=400px; width="230px"></img><br>
 # Detail screen which displays details about the selected movies 
