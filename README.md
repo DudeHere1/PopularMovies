@@ -1,6 +1,6 @@
 # Popular Movies
 <p align="center">
-Displays a list of movies from moviedb.org
+# Displays a list of movies from moviedb.org
 <img src="https://raw.githubusercontent.com/pranavj7Z/PopularMovies/master/one.png" height=400px; width="230px"></img></br>
 </P>
 # Allows you to sort the movies
@@ -13,3 +13,4 @@ Displays a list of movies from moviedb.org
 <img src="https://raw.githubusercontent.com/pranavj7Z/PopularMovies/master/fou.png" height=400px; width="230px"></img><br>
 # Get the youtube videolinks and reviews of each movie
 <img src="https://raw.githubusercontent.com/pranavj7Z/PopularMovies/master/six.png" height=400px; width="230px"></img><br>
+</p>
