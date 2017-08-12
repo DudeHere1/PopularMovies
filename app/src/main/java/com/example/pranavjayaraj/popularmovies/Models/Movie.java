@@ -17,7 +17,7 @@ public class Movie implements Parcelable {
            private String image; // poster_path
            private String image2; // backdrop_path
            private String overview;//overview
-            private int rating; // vote_average
+            private double rating; // vote_average
           private String date; // release_date
             private int count;//votecount
             private double pop;//popularity
@@ -31,7 +31,7 @@ public class Movie implements Parcelable {
                     this.image = movie.getString("poster_path");
                     this.image2 = movie.getString("backdrop_path");
                     this.overview = movie.getString("overview");
-                    this.rating = movie.getInt("vote_average");
+                    this.rating = movie.getDouble("vote_average");
                     this.date = movie.getString("release_date");
                     this.count=movie.getInt("vote_count");
                     this.pop=movie.getDouble("popularity");
@@ -71,7 +71,7 @@ public class Movie implements Parcelable {
                     public String getOverview() {
                     return overview;
                }
-                  public int getRating() {return rating;}
+                  public double getRating() {return rating;}
 
           public int getCount() { return count;}
 
@@ -91,7 +91,7 @@ public class Movie implements Parcelable {
                   dest.writeString(image);
                    dest.writeString(image2);
                  dest.writeString(overview);
-                 dest.writeInt(rating);
+                 dest.writeDouble(rating);
                   dest.writeString(date);
                  dest.writeInt(count);
                  dest.writeDouble(pop);
@@ -113,7 +113,7 @@ public class Movie implements Parcelable {
                     image = in.readString();
                    image2 = in.readString();
                     overview = in.readString();
-                  rating = in.readInt();
+                  rating = in.readDouble();
                     date = in.readString();
                     count =in.readInt();
                     pop =in.readDouble();
