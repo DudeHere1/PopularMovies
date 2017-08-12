@@ -5,6 +5,7 @@
 <img src="https://raw.githubusercontent.com/pranavj7Z/PopularMovies/master/five.png" height=400px; width="230px"></img><br>
 # Detail screen which displays details about the selected movies 
 <img src="https://raw.githubusercontent.com/pranavj7Z/PopularMovies/master/two.png" height=400px; width="230px"></img><br>
+# share the movies with anyone at ease
 <img src="https://raw.githubusercontent.com/pranavj7Z/PopularMovies/master/eight.png" height=400px; width="230px"></img><br>
 <img src="https://raw.githubusercontent.com/pranavj7Z/PopularMovies/master/fou.png" height=400px; width="230px"></img><br>
 <img src="https://raw.githubusercontent.com/pranavj7Z/PopularMovies/master/six.png" height=400px; width="230px"></img><br>
